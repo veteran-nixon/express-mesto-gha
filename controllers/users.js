@@ -38,7 +38,7 @@ module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about })
     .then((user) => {
-      res.send({ user, message: 'Профиль обновлен' });
+      res.send(user);
     })
     .catch(() => {
       if (BadRequestError) {
