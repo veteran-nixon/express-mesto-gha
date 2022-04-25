@@ -22,7 +22,7 @@ module.exports.createCard = (req, res) => {
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send(card))
     .catch(() => {
-      if (BadRequestError) {
+      if (res.status(BadRequestError)) {
         res.send({ message: 'Переданы некорректные данные при создании карточки' });
       }
       res.status(DefaultError).send({ message: 'Произошла ошибка' });
@@ -33,9 +33,9 @@ module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .then((card) => res.send(card))
     .catch(() => {
-      if (BadRequestError) {
+      if (res.status(BadRequestError)) {
         res.send({ message: 'Переданы некорректные данные для постановки лайка' });
-      } else if (NotFoundError) {
+      } else if (res.status(NotFoundError)) {
         res.send({ message: 'Передан несуществующий _id карточки' });
       }
       res.status(DefaultError).send({ message: 'Произошла ошибка' });
@@ -46,9 +46,9 @@ module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .then((card) => res.send(card))
     .catch(() => {
-      if (BadRequestError) {
+      if (res.status(BadRequestError)) {
         res.send({ message: 'Переданы некорректные данные для снятия лайка' });
-      } else if (NotFoundError) {
+      } else if (res.status(NotFoundError)) {
         res.send({ message: 'Передан несуществующий _id карточки' });
       }
       res.status(DefaultError).send({ message: 'Произошла ошибка' });

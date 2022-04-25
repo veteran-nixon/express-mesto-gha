@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const userRouter = require('./routes/user');
 const cardRouter = require('./routes/card');
 
-const NotFoundError = 404;
+const BadRequestError = 400;
 
 // подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb');
@@ -15,7 +15,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 const app = express();
 
 router.use('*', (req, res) => {
-  res.status(NotFoundError).send({ message: `Страницы по адресу ${req.baseUrl} не существует` });
+  res.status(BadRequestError).send({ message: `Страницы по адресу ${req.baseUrl} не существует` });
 });
 
 app.use(express.json());
