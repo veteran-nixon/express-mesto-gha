@@ -31,7 +31,13 @@ module.exports.createCard = (req, res) => {
 
 module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-    .then((card) => res.send(card))
+    .then((card) => {
+      if (card) {
+        res.send(card);
+      } else {
+        res.status(NotFoundError).send({ message: 'Карточка с таким _id не найдена' });
+      }
+    })
     .catch(() => {
       if (res.status(BadRequestError)) {
         res.send({ message: 'Переданы некорректные данные для постановки лайка' });

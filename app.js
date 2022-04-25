@@ -1,6 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const express = require('express');
-const router = require('express').Router();
 
 const { PORT = 3000 } = process.env;
 const mongoose = require('mongoose');
@@ -14,10 +13,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 const app = express();
 
-router.use('*', (req, res) => {
-  res.status(BadRequestError).send({ message: `Страницы по адресу ${req.baseUrl} не существует` });
-});
-
 app.use(express.json());
 // временный id
 app.use((req, res, next) => {
@@ -30,6 +25,9 @@ app.use((req, res, next) => {
 
 app.use(userRouter);
 app.use(cardRouter);
+app.use('*', (req, res) => {
+  res.status(BadRequestError).send({ message: `Страницы по адресу ${req.baseUrl} не существует` });
+});
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
