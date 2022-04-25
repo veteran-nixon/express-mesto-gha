@@ -12,8 +12,14 @@ module.exports.getCards = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardsId)
-    .then((card) => res.send(card))
-    .catch(() => res.status(NotFoundError).send({ message: 'Передан несуществующий _id карточки' }));
+    .then((card) => {
+      if (card) {
+        res.send(card);
+      } else {
+        res.status(NotFoundError).send({ message: 'Карточка с таким _id не найдена' });
+      }
+    })
+    .catch(() => res.status(BadRequestError).send({ message: 'Передан несуществующий _id карточки' }));
 };
 
 module.exports.createCard = (req, res) => {
