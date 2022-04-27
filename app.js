@@ -1,6 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies */
 const express = require('express');
-
 const { PORT = 3000 } = process.env;
 const mongoose = require('mongoose');
 const userRouter = require('./routes/user');

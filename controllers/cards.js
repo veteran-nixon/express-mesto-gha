@@ -19,7 +19,13 @@ module.exports.deleteCard = (req, res) => {
         res.status(NotFoundError).send({ message: 'Карточка с таким _id не найдена' });
       }
     })
-    .catch(() => res.status(BadRequestError).send({ message: 'Передан несуществующий _id карточки' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(BadRequestError).send({ message: 'Передан несуществующий _id карточки' });
+      } else {
+        res.status(DefaultError).send({ message: 'Произошла ошибка' });
+      }
+    });
 };
 
 module.exports.createCard = (req, res) => {
@@ -27,11 +33,12 @@ module.exports.createCard = (req, res) => {
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send(card))
-    .catch(() => {
-      if (res.status(BadRequestError)) {
-        res.send({ message: 'Переданы некорректные данные при создании карточки' });
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(BadRequestError).send({ message: 'Переданы некорректные данные при создании карточки' });
+      } else {
+        res.status(DefaultError).send({ message: 'Произошла ошибка' });
       }
-      res.status(DefaultError).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -44,13 +51,12 @@ module.exports.likeCard = (req, res) => {
         res.status(NotFoundError).send({ message: 'Карточка с таким _id не найдена' });
       }
     })
-    .catch(() => {
-      if (res.status(BadRequestError)) {
-        res.send({ message: 'Переданы некорректные данные для постановки лайка' });
-      } else if (res.status(NotFoundError)) {
-        res.send({ message: 'Передан несуществующий _id карточки' });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(BadRequestError).send({ message: 'Переданы некорректные данные для постановки лайка' });
+      } else {
+        res.status(DefaultError).send({ message: 'Произошла ошибка' });
       }
-      res.status(DefaultError).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -63,12 +69,11 @@ module.exports.dislikeCard = (req, res) => {
         res.status(NotFoundError).send({ message: 'Карточка с таким _id не найдена' });
       }
     })
-    .catch(() => {
-      if (res.status(BadRequestError)) {
-        res.send({ message: 'Переданы некорректные данные для снятия лайка' });
-      } else if (res.status(NotFoundError)) {
-        res.send({ message: 'Передан несуществующий _id карточки' });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(BadRequestError).send({ message: 'Переданы некорректные данные для снятия лайка' });
+      } else {
+        res.status(DefaultError).send({ message: 'Произошла ошибка' });
       }
-      res.status(DefaultError).send({ message: 'Произошла ошибка' });
     });
 };

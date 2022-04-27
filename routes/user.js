@@ -1,6 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 const router = require('express').Router();
-// eslint-disable-next-line object-curly-newline
 const { createUser, getUser, getUsers, updateUser, updateAvatar } = require('../controllers/users');
 
 router.get('/users', getUsers);
