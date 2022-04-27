@@ -1,4 +1,5 @@
 const User = require('../models/user');
+
 const BadRequestError = 400;
 const NotFoundError = 404;
 const DefaultError = 500;

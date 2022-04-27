@@ -1,7 +1,11 @@
 const express = require('express');
+
 const { PORT = 3000 } = process.env;
+
 const mongoose = require('mongoose');
+
 const userRouter = require('./routes/user');
+
 const cardRouter = require('./routes/card');
 
 const NotFoundError = 404;
