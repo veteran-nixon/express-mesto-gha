@@ -50,7 +50,7 @@ module.exports.createUser = (req, res, next) => {
       if (user) {
         next(new ConflictError(`Пользователь почтой ${email} уже существует`));
       }
-      return bcrypt.hash(password, 4);
+      return bcrypt.hash(password, 10);
     })
     .then((hash) => User.create({
       name,
