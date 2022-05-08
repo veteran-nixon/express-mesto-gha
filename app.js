@@ -32,23 +32,22 @@ app.post('/signup', celebrate({
     avatar: Joi.string().regex(/^((http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\\/])*)?/),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(4),
-  }).unknown(true),
+  }),
 }), createUser);
 app.post('/signin', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(4),
   }),
 }), login);
 
 app.use(auth);
 
-app.use(userRouter);
-app.use(cardRouter);
+app.use(auth, userRouter);
+app.use(auth, cardRouter);
 app.use('*', (req, res) => {
   res.status(NotFoundError).send({ message: `Страницы по адресу ${req.baseUrl} не существует` });
 });
-
 app.use(errors());
 
 app.use((err, req, res, next) => {

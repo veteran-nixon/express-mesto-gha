@@ -71,6 +71,7 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
+
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => res.send(user))
     .catch((err) => {
@@ -97,6 +98,10 @@ module.exports.updateAvatar = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new NotFoundError('Поля почты или пароля не заполнены');
+  }
 
   User.findUserByCredentials(email, password)
     .then((user) => {
