@@ -20,12 +20,12 @@ router.post('/cards', celebrate({
 }), createCard);
 router.put('/cards/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardsId: Joi.string().required().length(24).hex(),
+    cardId: Joi.string().required().length(24).hex(),
   }),
 }), likeCard);
 router.delete('/cards/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardsId: Joi.string().required().length(24).hex(),
+    cardId: Joi.string().required().length(24).hex(),
   }),
 }), dislikeCard);
 
