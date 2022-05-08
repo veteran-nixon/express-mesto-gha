@@ -16,7 +16,9 @@ const {
 
 const auth = require('./middlewares/auth');
 
-const NotFoundError = 404;
+const NotFoundError = require('./errors/not-found-error');
+
+const AllErrors = require('./middlewares/all-errors');
 
 // подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb');
@@ -45,24 +47,12 @@ app.use(auth);
 
 app.use(auth, userRouter);
 app.use(auth, cardRouter);
-app.use('*', (req, res) => {
-  res.status(NotFoundError).send({ message: `Страницы по адресу ${req.baseUrl} не существует` });
+app.use('*', (req, res, next) => {
+  res.send(next(new NotFoundError(`Страницы по адресу ${req.baseUrl} не существует`)));
 });
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? `На сервере произошла ошибка ${message}`
-        : message,
-    });
-  next();
-});
+app.use(AllErrors);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
